@@ -4,7 +4,8 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	"time"
+	"ws/src/core"
+	"ws/src/handler"
 )
 
 var upgrader = websocket.Upgrader{
@@ -14,18 +15,13 @@ var upgrader = websocket.Upgrader{
 }
 
 func main() {
-	http.HandleFunc("/echo", func(writer http.ResponseWriter, request *http.Request) {
-		client, err := upgrader.Upgrade(writer, request, nil)
-		if err != nil {
-			log.Fatalln(err.Error())
-		}
+	http.HandleFunc("/echo", handler.Echo)
+	http.HandleFunc("/all", func(writer http.ResponseWriter, request *http.Request) {
+		msg := request.URL.Query().Get("msg")
+		core.ClientMap.SendToAll(msg)
 
-		for {
-			if err := client.WriteMessage(websocket.TextMessage, []byte("hello")); err != nil {
-				log.Println(err.Error())
-			} else {
-				time.Sleep(time.Second * 2)
-			}
+		if _, err := writer.Write([]byte("ok")); err != nil {
+			log.Fatalln(err)
 		}
 	})
 
