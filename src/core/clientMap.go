@@ -1,10 +1,12 @@
 package core
 
 import (
-	"github.com/gorilla/websocket"
 	"log"
 	"sync"
 	"time"
+	"ws/src/model"
+
+	"github.com/gorilla/websocket"
 )
 
 var (
@@ -34,11 +36,13 @@ func (mapStruct *ClientMapStruct) Remove(conn *websocket.Conn) {
 }
 
 // SendToAll 向所有连接对象发送消息
-func (mapStruct *ClientMapStruct) SendToAll(message string) {
+func (mapStruct *ClientMapStruct) SendAllPods() {
 	mapStruct.data.Range(func(key, value interface{}) bool {
 
 		if client, ok := value.(*WsClient); ok {
-			if err := client.conn.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+			// if err := client.conn.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+				if err:=client.conn.WriteJSON(model.MockPodList());err!=nil {
+					
 				mapStruct.Remove(client.conn)
 				log.Fatalln(err.Error())
 			}

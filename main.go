@@ -17,8 +17,8 @@ var upgrader = websocket.Upgrader{
 func main() {
 	http.HandleFunc("/echo", handler.Echo)
 	http.HandleFunc("/all", func(writer http.ResponseWriter, request *http.Request) {
-		msg := request.URL.Query().Get("msg")
-		core.ClientMap.SendToAll(msg)
+		// msg := request.URL.Query().Get("msg")
+		core.ClientMap.SendAllPods()
 
 		if _, err := writer.Write([]byte("ok")); err != nil {
 			log.Fatalln(err)
