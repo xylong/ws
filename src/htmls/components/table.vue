@@ -50,7 +50,9 @@
        },
        methods:{
            testSend(){
-               this.client.send("test abc")
+               //this.client.send("test abc")
+               const pod=NewPod("abc","aaa","fe")
+               this.client.send(JSON.stringify(pod))
            }
        }
 

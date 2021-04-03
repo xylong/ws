@@ -12,3 +12,16 @@ const NewClient=function () {
     }
     return ws
 }
+const TYPE_NEWPOD=101;
+const NewPod=function (PodName,PodImage,PodNode) {
+     return {
+         CmdType:TYPE_NEWPOD,
+         CmdAction:"add",
+         CmdData:{
+             PodName,
+             PodImage,
+             PodNode
+         }
+     }
+
+}
