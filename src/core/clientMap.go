@@ -28,6 +28,8 @@ func (mapStruct *ClientMapStruct) Store(conn *websocket.Conn) {
 	mapStruct.data.Store(client.conn.RemoteAddr().String(), client)
 
 	go client.Ping(time.Second * 10)
+	go client.readLoop()
+	go client.HandleMessage()
 }
 
 // Remove 从map中删除客户端
@@ -41,8 +43,8 @@ func (mapStruct *ClientMapStruct) SendAllPods() {
 
 		if client, ok := value.(*WsClient); ok {
 			// if err := client.conn.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
-				if err:=client.conn.WriteJSON(model.MockPodList());err!=nil {
-					
+			if err := client.conn.WriteJSON(model.MockPodList()); err != nil {
+
 				mapStruct.Remove(client.conn)
 				log.Fatalln(err.Error())
 			}
